@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\Commentaire;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +32,17 @@ class CommentaireController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'contenue'=>'required|string',
+        ]);
+
+        // Ajouter les clés étrangères
+        $validated['user_id'] = Auth::user()->id;
+        $validated['article_id'] = $article->id;
+
+        Commentaire::create($validated);
+
+        return redirect()->route('article.show', $article);
     }
 
     /**

@@ -33,7 +33,17 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'titre'=> 'required|string|max:255',
+            'contenue'=> 'required|string',
+        ]);
+
+        // Ajouter l'id de l'utilisateur connecté
+
+        $validated['user_id'] = Auth::user()->id;
+
+        Article::create($validated);
+        return redirect()->route('articles.index');
     }
 
     /**
